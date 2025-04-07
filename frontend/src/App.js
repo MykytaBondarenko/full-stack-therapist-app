@@ -1,21 +1,31 @@
 import './App.css';
+import NavBar from "./components/NavBar/NavBar.js";
+import Home from "./components/Home/Home.js";
+import Clients from "./components/Clients/Clients.js";
+import Therapists from "./components/Therapists/Therapists.js";
+import Sessions from "./components/Sessions/Sessions.js";
 
 function App() {
+  let CurrentPage;
+  switch(window.location.pathname) {
+    case '/':
+      CurrentPage = Home;
+      break;
+    case '/clients':
+      CurrentPage = Clients;
+      break;
+    case '/therapists':
+      CurrentPage = Therapists;
+      break;
+    case '/sessions':
+      CurrentPage = Sessions;
+      break;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar></NavBar>
+      <CurrentPage></CurrentPage>
     </div>
   );
 }
