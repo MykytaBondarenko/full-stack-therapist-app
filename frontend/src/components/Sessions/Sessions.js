@@ -44,8 +44,8 @@ export default function Sessions() {
                                                         <p>Therapist id: {session.therapist_id}</p>
                                                         <p>Client id: {session.client_id}</p>
                                                         <p>Notes: <button onClick={() => getNotes(session.notes)}>Click to see</button></p>
-                                                        <p>Date: {session.date}</p>
-                                                        <p>Length: {session.length}</p>
+                                                        <p>Date: {new Date(session.date).toDateString()}</p>
+                                                        <p>Length: {session.length.substring(4,8)}h</p>
                                                     </li>);
         return sessionsList;
     }
