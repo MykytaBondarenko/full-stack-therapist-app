@@ -1,14 +1,23 @@
 const db = require("../database.js");
 
 exports.getSessionsData = (req, res) => {
-    //const data = req.query;
-    //const name = data.name ? data.name : undefined;
+    const data = req.query;
+    const therapist_id = data.therapist_id ? data.therapist_id : undefined;
+    const client_id = data.client_id ? data.client_id : undefined;
 
-    let queryContent;
-    //console.log("name: " + name);
-    //if (name == undefined) queryContent = "SELECT * FROM Clients";
-    //else queryContent = "SELECT * FROM Clients WHERE name REGEXP \"" + name + "\""
-    queryContent = "SELECT * FROM Sessions";
+    console.log("therapist_id: " + therapist_id);
+    console.log("client_id: " + client_id);
+    let queryContent = "SELECT * FROM Sessions";
+    if (therapist_id != undefined && client_id != undefined) {
+        queryContent += (" WHERE therapist_id = " + therapist_id + " AND client_id = "+ client_id);
+    } else {
+        if (therapist_id != undefined || client_id != undefined) {
+            if (therapist_id != undefined) queryContent += (" WHERE therapist_id = " + therapist_id);
+            else queryContent += (" WHERE client_id = " + client_id);
+        }
+    }
+    console.log(queryContent);
+
     db.query(
         queryContent,
         function(error, result) {

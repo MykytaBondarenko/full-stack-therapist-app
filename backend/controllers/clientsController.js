@@ -22,3 +22,26 @@ exports.getClientsData = (req, res) => {
         }
     )
 }
+
+exports.createClientData = (req, res) => {
+    const data = req.body;
+    const name = data.name;
+    const email = data.email;
+    const phone_number = data.phone_number;
+    const regularity = data.regularity;
+
+    let queryContent = `INSERT INTO Clients (id, name, email, phone_number, regularity) VALUES (NULL, '${name}', '${email}', '${phone_number}', '${regularity}')`;
+
+    console.log(queryContent);
+    db.query(
+        queryContent,
+        function (error, result) {
+            if (error) {
+                console.log(error);
+                res.send(error);
+            } else {
+                console.log(result);
+                res.send(result);
+            }    
+    });
+}

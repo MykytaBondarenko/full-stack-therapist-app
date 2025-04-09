@@ -5,5 +5,6 @@ server.use(cors());
 const clientsController = require("../controllers/clientsController.js");
 
 server.get("/clients/", clientsController.getClientsData);
+server.post("/clients/", clientsController.createClientData);
 
 module.exports = server;

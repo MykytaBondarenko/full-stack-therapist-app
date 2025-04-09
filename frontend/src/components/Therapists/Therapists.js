@@ -1,4 +1,4 @@
-import './Therapists.css';
+import '../Components.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -39,12 +39,12 @@ export default function Therapists() {
 
     function getTherapistsList() {
         let therapistsList;
-        if (therapistsData.length < 1) therapistsList = "Couldn't find the client";
-        else therapistsList = therapistsData.map(therapist => <li class="therapistBox">{therapist.title} {therapist.name}
-                                                        <p>Email: {therapist.email}</p>
+        if (therapistsData.length < 1) therapistsList = "Couldn't find the therapist";
+        else therapistsList = therapistsData.map(therapist => <li class="objectBox">{therapist.title} {therapist.name}
+                                                        <p id="objectEmail">{therapist.email}</p>
                                                         <p>Location: {therapist.location}</p>
                                                         <p>Experience: {therapist.years} years</p>
-                                                        <p>Avalability: {therapist.availability} years</p>
+                                                        <p>Avalability: {therapist.availability}</p>
                                                     </li>);
         return therapistsList;
     }
@@ -54,10 +54,10 @@ export default function Therapists() {
             <h1>Therapists page</h1>
             <div id="inputDiv">
                 <div>
-                    <input type="text" id="therapistName" placeholder="Therapists's Name" class="findTherapist" onChange={(nameInputHandler)}></input>
+                    <input type="text" id="objectName" placeholder="Therapists's Name" class="findObject" onChange={(nameInputHandler)}></input>
                 </div>
             </div>
-            <ul id="therapistsUL">{therapistsList}</ul>
+            <ul id="objectsUL">{therapistsList}</ul>
         </div>
     )
 }

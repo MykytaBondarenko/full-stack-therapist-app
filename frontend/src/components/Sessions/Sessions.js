@@ -1,4 +1,4 @@
-import './Sessions.css';
+import '../Components.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -15,11 +15,12 @@ export default function Sessions() {
         fetchSessions();
     }, []);
 
-    function fetchSessions() {
+    function fetchSessions(therapistID, clientID) {
         axios
             .get("http://localhost:5000/sessions/", {
                 params: {
-                    //name: sessionName
+                    therapist_id: therapistID,
+                    client_id: clientID
                 }
             })
             .then((response) => {
@@ -40,7 +41,7 @@ export default function Sessions() {
     function getSessionsList() {
         let sessionsList;
         if (sessionsData.length < 1) sessionsList = "Couldn't find the session";
-        else sessionsList = sessionsData.map(session => <li class="sessionBox">{session.name}
+        else sessionsList = sessionsData.map(session => <li class="objectBox">{session.name}
                                                         <p>Therapist id: {session.therapist_id}</p>
                                                         <p>Client id: {session.client_id}</p>
                                                         <p>Notes: <button onClick={() => getNotes(session.notes)}>Click to see</button></p>
@@ -57,7 +58,14 @@ export default function Sessions() {
     return (
         <div>
             <h1>Sessions page</h1>
-            <ul id="sessionsUL">{sessionsList}</ul>
+            <div id="inputDiv">
+                <div>
+                    <input type="text" id="therapistID" placeholder="Therapists's Id" class="findObject"></input>
+                    <input type="text" id="clientID" placeholder="Clients's Id" class="findObject"></input>
+                    <button onClick={() => fetchSessions(document.getElementById('therapistID').value, document.getElementById('clientID').value)} class="findArtist">Search session</button>
+                </div>
+            </div>
+            <ul id="objectsUL">{sessionsList}</ul>
         </div>
     )
 }
