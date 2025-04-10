@@ -1,4 +1,4 @@
-import './Clients.css';
+import '../Components.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -32,6 +32,111 @@ export default function Clients() {
             });
     }
 
+    function createClient() {
+        const name = prompt("Enter the client's name: ");
+        if (!name) {
+            alert("No name was entered");
+            return;
+        }
+        const emailPattern = "@.+\\..+";
+        const email = prompt("Enter the client's email: ");
+        if (!email) {
+            alert("No email was entered");
+            return;
+        }
+        if (!email.match(emailPattern)) {
+            alert("Wrong format of an email");
+            return;
+        }
+        const phone_number = prompt("Enter the client's phone number: ");
+        if (!phone_number) {
+            alert("No phone number was entered");
+            return;
+        }
+        const regularity = prompt("Enter the client's regularity of the sessions (WEEKLY / MONTHLY)");
+        if (!regularity) {
+            alert("No regularity was entered");
+            return;
+        }
+        if (regularity != "WEEKLY" && regularity != "MONTHLY") {
+            alert("The format of the regularity is wrong");
+            return;
+        }
+
+        axios
+            .post("http://localhost:5000/clients", {
+                name: name,
+                email: email,
+                phone_number: phone_number,
+                regularity: regularity
+            })
+            .then((response) => {
+                console.log(response);
+                document.getElementById("objectName").value = "";
+                fetchClients();
+            })
+    }
+
+    function updateClient(client) {
+        const name = prompt("Enter the new name of the client: ", client.name);
+        if (!name) {
+            alert("No name was entered");
+            return;
+        }
+        const emailPattern = "@.+\\..+";
+        const email = prompt("Enter the new email of the client: ", client.email);
+        if (!email) {
+            alert("No email was entered");
+            return;
+        }
+        if (!email.match(emailPattern)) {
+            alert("Wrong format of an email");
+            return;
+        }
+        const phone_number = prompt("Enter the new phone number of the client: ", client.phone_number);
+        if (!phone_number) {
+            alert("No phone number was entered");
+            return;
+        }
+        const regularity = prompt("Enter the client's new regularity of the sessions (WEEKLY / MONTHLY)", client.regularity);
+        if (!regularity) {
+            alert("No regularity was entered");
+            return;
+        }
+        if (regularity != "WEEKLY" && regularity != "MONTHLY") {
+            alert("The format of the regularity is wrong");
+            return;
+        }
+
+        axios
+            .put("http://localhost:5000/clients", {
+                id: client.id,
+                name: name,
+                email: email,
+                phone_number: phone_number,
+                regularity: regularity
+            })
+            .then((response) => {
+                console.log(response);
+                fetchClients();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    function deleteClient(clientID) {
+        axios
+            .delete(`http://localhost:5000/clients/${clientID}`)
+            .then((response) => {
+                console.log(response);
+                fetchClients();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
     if (loading) return (<div>Loading...</div>);
     if (error) return (<div>Error: {error}</div>);
 
@@ -40,10 +145,12 @@ export default function Clients() {
     function getClientsList() {
         let clientsList;
         if (clientsData.length < 1) clientsList = "Couldn't find the client";
-        else clientsList = clientsData.map(client => <li class="clientBox">{client.name}
-                                                        <p>Email: {client.email}</p>
+        else clientsList = clientsData.map(client => <li class="objectBox">{client.name}
+                                                        <p id="objectEmail">{client.email}</p>
                                                         <p>Phone No: {client.phone_number}</p>
                                                         <p>Regularity: {client.regularity}</p>
+                                                        <button onClick={() => updateClient(client)}>Update</button>
+                                                        <button onClick={() => deleteClient(client.id)}>Delete</button>
                                                     </li>);
         return clientsList;
     }
@@ -53,10 +160,13 @@ export default function Clients() {
             <h1>Clients page</h1>
             <div id="inputDiv">
                 <div>
-                    <input type="text" id="clientName" placeholder="Client's Name" class="findClient" onChange={(nameInputHandler)}></input>
+                    <input type="text" id="objectName" placeholder="Client's Name" class="findObject" onChange={(nameInputHandler)}></input>
+                </div>
+                <div>
+                    <button onClick={() => createClient()} class="createObject">Add a new client</button>
                 </div>
             </div>
-            <ul id="clientsUL">{clientsList}</ul>
+            <ul id="objectsUL">{clientsList}</ul>
         </div>
     )
 }
