@@ -38,7 +38,7 @@ export default function Clients() {
             alert("No name was entered");
             return;
         }
-        const emailPattern = "@.+\..+";
+        const emailPattern = "@.+\\..+";
         const email = prompt("Enter the client's email: ");
         if (!email) {
             alert("No email was entered");
@@ -77,6 +77,66 @@ export default function Clients() {
             })
     }
 
+    function updateClient(client) {
+        const name = prompt("Enter the new name of the client: ", client.name);
+        if (!name) {
+            alert("No name was entered");
+            return;
+        }
+        const emailPattern = "@.+\\..+";
+        const email = prompt("Enter the new email of the client: ", client.email);
+        if (!email) {
+            alert("No email was entered");
+            return;
+        }
+        if (!email.match(emailPattern)) {
+            alert("Wrong format of an email");
+            return;
+        }
+        const phone_number = prompt("Enter the new phone number of the client: ", client.phone_number);
+        if (!phone_number) {
+            alert("No phone number was entered");
+            return;
+        }
+        const regularity = prompt("Enter the client's new regularity of the sessions (WEEKLY / MONTHLY)", client.regularity);
+        if (!regularity) {
+            alert("No regularity was entered");
+            return;
+        }
+        if (regularity != "WEEKLY" && regularity != "MONTHLY") {
+            alert("The format of the regularity is wrong");
+            return;
+        }
+
+        axios
+            .put("http://localhost:5000/clients", {
+                id: client.id,
+                name: name,
+                email: email,
+                phone_number: phone_number,
+                regularity: regularity
+            })
+            .then((response) => {
+                console.log(response);
+                fetchClients();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
+    function deleteClient(clientID) {
+        axios
+            .delete(`http://localhost:5000/clients/${clientID}`)
+            .then((response) => {
+                console.log(response);
+                fetchClients();
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+    }
+
     if (loading) return (<div>Loading...</div>);
     if (error) return (<div>Error: {error}</div>);
 
@@ -89,6 +149,8 @@ export default function Clients() {
                                                         <p id="objectEmail">{client.email}</p>
                                                         <p>Phone No: {client.phone_number}</p>
                                                         <p>Regularity: {client.regularity}</p>
+                                                        <button onClick={() => updateClient(client)}>Update</button>
+                                                        <button onClick={() => deleteClient(client.id)}>Delete</button>
                                                     </li>);
         return clientsList;
     }
