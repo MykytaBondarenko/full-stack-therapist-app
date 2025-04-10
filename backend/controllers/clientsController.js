@@ -73,10 +73,23 @@ exports.deleteClientData = (req, res) => {
     const data = req.params;
     const clientID = data.clientID;
 
-    let queryContent = `DELETE FROM Clients WHERE id = ${clientID}`;
-    console.log(queryContent);
+    let queryContent1 = `DELETE FROM Sessions WHERE client_id = ${clientID}`;
+    let queryContent2 = `DELETE FROM Clients WHERE id = ${clientID}`;
+    console.log(queryContent1);
+    console.log(queryContent2);
     db.query(
-        queryContent,
+        queryContent1,
+        function (error, result) {
+            if (error) {
+                console.log(error);
+                res.send(error);
+                return;
+            } else {
+                console.log(result);
+            }    
+    });
+    db.query(
+        queryContent2,
         function (error, result) {
             if (error) {
                 console.log(error);
